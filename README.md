@@ -25,3 +25,7 @@ npm run dev
 cd frontend/todo
 npm install
 npm run dev
+=======
+# Todo-App
+Full Stack Todo Application with CRUD operations, REST APIs, MongoDB persistence\
+>>>>>>> 6a72255f83213293bbe4f1af1eb72ca4926c947d
