@@ -1,105 +1,66 @@
-📌 TaskFlow – Task Management Web Application
+📌 Taskify – Task Management Web Application
 
-TaskFlow is a full-stack task management application designed to help users efficiently manage their daily tasks with priority handling and clear task status tracking.
+This repository contains a full-stack Task Management application (MERN-like) with support for task priority, due dates, and separate Pending / Completed views. The UI was refactored from a Todo app to a Task-focused UX.
 
-🚀 Features
+Key features
 
-➕ Add new tasks with title, priority, and due date
+- Add tasks with: title, priority (high / medium / low), and due date
+- Pending and Completed sections (tasks default to "pending")
+- Pending tasks sorted by priority: High → Medium → Low
+- Mark tasks completed or move them back to pending
+- Clear Completed — remove all completed tasks at once
+- Priority badges with color coding (High: red, Medium: yellow, Low: green)
+- Clean, responsive UI using React + Tailwind
 
-🟡 Separate views for Pending and Completed tasks
+Tech stack
 
-🔴 Priority-based task organization:
+- Frontend: React, Vite, Tailwind CSS
+- Backend: Node.js, Express
+- Database: MongoDB, Mongoose
 
-High
+API (server base: http://localhost:3000/api/v1)
 
-Medium
+- GET /todos — list all tasks
+- POST /todos — create task (body: `{ title, description?, priority, dueDate, status }`)
+- GET /todos/:id — fetch single task
+- PUT /todos/:id — update task fields
+- DELETE /todos/:id — delete one task
+- PUT /todos/toggle/:id — toggle task status (pending ↔ completed)
+- DELETE /todos/completed — delete all completed tasks
 
-Low
+Run locally
 
-✅ Mark tasks as completed or move them back to pending
+1. Start the backend
 
-🎯 Automatic sorting of pending tasks by priority
-
-🎨 Clean and responsive user interface
-
-🔄 Real-time UI updates
-
-🧱 Tech Stack
-Frontend
-
-React.js
-
-Tailwind CSS
-
-JavaScript (ES6+)
-
-Backend
-
-Node.js
-
-Express.js
-
-MongoDB
-
-Mongoose
-
-🧠 Task Logic Overview
-
-New tasks are added with pending status by default
-
-Tasks are displayed in two sections:
-
-Pending Tasks
-
-Completed Tasks
-
-Pending tasks are sorted by priority (High → Medium → Low)
-
-Completed tasks are visually distinguished using strike-through styling
-
-📸 Screenshots
-
-(Add screenshots here for better visibility and recruiter impact)
-
-🔧 Installation & Setup
-# Clone the repository
-git clone https://github.com/Garvit1908/Todo-App.git
-
-# Navigate to project directory
-cd Todo-App
-
-# Install backend dependencies
+```bash
 cd backend
 npm install
+npm run start
+```
 
-# Install frontend dependencies
-cd ../frontend/todo
+2. Start the frontend app
+
+```bash
+cd frontend/todo
 npm install
-
-# Start backend server
-npm start
-
-# Start frontend server
 npm run dev
+```
 
-📈 Future Enhancements
+Open the app at http://localhost:5173 (Vite default) or the URL shown by the dev server.
 
-User authentication (JWT)
+Notes
 
-User-specific tasks
+- The frontend still uses the existing `/api/v1/todos` routes for compatibility; the UI refers to items as "tasks".
+- New task objects include: `id` (or `_id`), `title`, `status` ("pending"|"completed"), `priority` ("high"|"medium"|"low"), and `dueDate` (ISO date).
 
-Search and filter functionality
+Future improvements
 
-Dashboard with task statistics
+- User accounts and per-user tasks
+- Filters, search, and pagination
+- Deployment and CI
 
-Deployment with environment-based configuration
-
-📝 Resume Description (You can copy this)
-
-Built a full-stack Task Management web application with priority-based task organization, separate pending and completed task views, and due date tracking using the MERN stack.
-
-👨‍💻 Author
+Author
 
 Garvit
 
-⭐ If you like this project, consider giving it a star!
+If this project helped you, a star is appreciated ⭐
