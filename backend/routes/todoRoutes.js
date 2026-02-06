@@ -28,6 +28,9 @@ router.delete("/todos/:id", deleteTodo);
 
 router.put("/todos/toggle/:id",toggleTodo);
 
+// Delete all completed todos
+router.delete('/todos/completed', require('../controllers/todoController').deleteCompletedTodos);
+
 
 
 module.exports = router;

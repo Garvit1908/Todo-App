@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+/* Make interactive controls show pointer on hover for clearer affordance */
+button,
+input[type="button"],
+input[type="submit"],
+.btn {
+	cursor: pointer;
+}
+
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+.btn:hover {
+	cursor: pointer;
+}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import Navbar from "./components/Navbar"
-import Todo from "./components/Todo"
+import Task from "./components/Task"
 
 function App() {
   
@@ -8,7 +8,7 @@ function App() {
   return (
     <>
         <Navbar/>
-        <Todo/>
+        <Task/>
     </>
   )
 }

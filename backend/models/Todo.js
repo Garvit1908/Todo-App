@@ -8,17 +8,30 @@ const todoschema=new mongoose.Schema(
         },
         description:{
             type:String,
-            required:true,
         },
+        // status: 'pending' or 'completed' (preferred)
+        status:{
+            type:String,
+            enum:["pending","completed"],
+            default:"pending"
+        },
+        // backward-compatible completed boolean
         completed:{
             type:Boolean,
             default:false
+        },
+        priority:{
+            type:String,
+            enum:["high","medium","low"],
+            default:"medium"
+        },
+        dueDate:{
+            type:Date,
         }
-        
     },
     {
         timestamps:true
     }
 )
 
-module.exports=mongoose.model("Todo", todoschema);
+module.exports=mongoose.model("Task", todoschema);

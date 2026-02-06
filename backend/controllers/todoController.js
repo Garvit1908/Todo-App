@@ -1,23 +1,26 @@
-const Todo = require("../models/Todo");
+const Task = require("../models/Todo");
 
 exports.createToDo=async(req,res)=>{
     try{
-
-        const{title,description}=req.body;
-        const response=await Todo.create(
+        const{title,description,priority,dueDate,status} = req.body;
+        const response=await Task.create(
             {
                 title,
-                description
+                description,
+                priority: priority || "medium",
+                dueDate: dueDate || null,
+                status: status || "pending",
+                completed: status === "completed" ? true : false
             }
         );
         res.status(201).json({
             success:true,
             data:response,
-            message:"Todo created succesfully"
+            message:"Task created succesfully"
         })
     }
     catch(error){
-   console.log("CREATE TODO ERROR:",error);   // ⭐ important
+   console.log("CREATE TASK ERROR:",error);
    res.status(500).json({
       success:false,
       message:error.message
@@ -28,11 +31,11 @@ exports.createToDo=async(req,res)=>{
 
 exports.getAllTodos=async(req,res)=>{
     try{
-        const todos=await Todo.find();
+        const todos=await Task.find();
         res.status(200).json({
             success:true,
             data:todos,
-            message:"All todos fetched successfully"
+            message:"All tasks fetched successfully"
         })
     }
     catch(error){
@@ -46,17 +49,17 @@ exports.getAllTodos=async(req,res)=>{
 exports.getTodoById=async(req,res)=>{
     try{
         const id=req.params.id;
-        const todo=await Todo.findById(id);
+        const todo=await Task.findById(id);
         if(!todo){
             return res.status(404).json({
                 success:false,
-                message:"Todo not found"
+                message:"Task not found"
             })
         }
         res.status(200).json({
             success:true,
             data:todo,
-            message:"Todo fetched successfully"
+            message:"Task fetched successfully"
         })
     }
     catch(error){
@@ -72,22 +75,25 @@ exports.updateTodo=async (req,res)=>{
     try{
         const id=req.params.id;
 
-        const {title,description}=req.body;
-        const todo=await Todo.findByIdAndUpdate(
+        const {title,description,priority,dueDate,status}=req.body;
+        const update = { title, description, priority, dueDate, status, updatedAt: Date.now() };
+        if(status) update.completed = status === "completed";
+
+        const todo=await Task.findByIdAndUpdate(
             id,
-            { title, description, updatedAt: Date.now() },
+            update,
             { new:true }
         );
         if(!todo){
             return res.status(404).json({
                 success:false,
-                message:"Todo not found"
+                message:"Task not found"
             })
         }
         res.status(200).json({
             success:true,
             data:todo,
-            message:"Todo updated successfully"
+            message:"Task updated successfully"
         })
     }
     catch(error){
@@ -102,16 +108,16 @@ exports.updateTodo=async (req,res)=>{
 exports.deleteTodo=async(req,res)=>{
     try{
         const id=req.params.id;
-        const todo=await Todo.findByIdAndDelete(id);
+        const todo=await Task.findByIdAndDelete(id);
         if(!todo){
             return res.status(404).json({
                 success:false,
-                message:"Todo not found"
+                message:"Task not found"
             })
         }
         res.status(200).json({
             success:true,
-            message:"Todo deleted successfully"
+            message:"Task deleted successfully"
         })
     }
     catch(error){
@@ -126,21 +132,35 @@ exports.deleteTodo=async(req,res)=>{
 exports.toggleTodo=async(req,res)=>{
  try{
 
-   const todo=await Todo.findById(req.params.id);
+     const todo=await Task.findById(req.params.id);
 
-   if(!todo){
-     return res.status(404).json({message:"Todo not found"});
-   }
+     if(!todo){
+         return res.status(404).json({message:"Task not found"});
+     }
 
-   todo.completed=!todo.completed;
+     // toggle status and completed for compatibility
+     const newStatus = (todo.status && todo.status === "completed") ? "pending" : "completed";
+     todo.status = newStatus;
+     todo.completed = newStatus === "completed";
 
-   await todo.save();
+     await todo.save();
 
-   res.status(200).json(todo);
+     res.status(200).json(todo);
 
  }
  catch(error){
-   console.log(error);
-   res.status(500).json(error.message);
+     console.log(error);
+     res.status(500).json(error.message);
  }
 }
+
+// Delete all completed tasks
+exports.deleteCompletedTodos = async (req, res) => {
+    try {
+        const result = await Task.deleteMany({ $or: [{ status: 'completed' }, { completed: true }] });
+        res.status(200).json({ success: true, deletedCount: result.deletedCount, message: 'Completed tasks deleted' });
+    } catch (error) {
+        console.log('DELETE COMPLETED ERROR:', error);
+        res.status(500).json({ success: false, message: error.message, stack: error.stack });
+    }
+};
